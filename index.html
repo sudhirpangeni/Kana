@@ -1,180 +1,53 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Kana Practice (Mobile PWA)</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Japanese Kana Practice</title>
+
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0066ff" />
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
 
 <style>
 :root{
-  --bg: #f5f7fb;
-  --card: #ffffff;
-  --text: #111827;
-  --muted: #6b7280;
-  --accent: #0066ff;
-  --button-bg: #0066ff;
-  --button-text: #ffffff;
-  --tab-active: #0066ff;
+  --bg:#f5f7fb; --card:#fff; --text:#111; --muted:#6b7280; --accent:#0066ff; --button-bg:#0066ff; --button-text:#fff; --tab-active:#0066ff;
 }
 [data-theme="dark"]{
-  --bg: #0b1220;
-  --card: #071127;
-  --text: #e6eef8;
-  --muted: #9aa7bb;
-  --accent: #3390ff;
-  --button-bg: #1a6cff;
-  --button-text: #fff;
-  --tab-active: #1a6cff;
+  --bg:#0b1220; --card:#071127; --text:#e6eef8; --muted:#9aa7bb; --accent:#3390ff; --button-bg:#1a6cff; --button-text:#fff; --tab-active:#1a6cff;
 }
-
-html,body{height:100%; margin:0; background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased;}
-.app {
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  padding:12px;
-  box-sizing:border-box;
-}
-/* Card container */
-.card{
-  width:100%;
-  max-width:520px;
-  background:var(--card);
-  border-radius:14px;
-  box-shadow: 0 8px 24px rgba(2,6,23,0.08);
-  padding:12px;
-  box-sizing:border-box;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-
-/* header */
-.header {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  padding:6px 4px;
-}
-.title { font-size:18px; font-weight:600; }
-.controls { display:flex; gap:6px; align-items:center; }
-
-/* tabs */
-.tabs {
-  display:flex;
-  gap:8px;
-  justify-content:center;
-  margin:6px 0 2px;
-}
-.tab {
-  flex:1;
-  text-align:center;
-  padding:10px 8px;
-  border-radius:10px;
-  border:1px solid rgba(0,0,0,0.06);
-  background:transparent;
-  font-weight:600;
-  cursor:pointer;
-  user-select:none;
-}
-.tab.active {
-  background:var(--tab-active);
-  color:white;
-  box-shadow:0 6px 16px rgba(6,30,84,0.08);
-}
-
-/* question & answer */
-.q-area {
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:6px;
-  padding:6px;
-}
-#question {
-  font-size:36px;
-  font-weight:700;
-  letter-spacing:0.6px;
-  margin-top:4px;
-}
-#answer {
-  font-size:36px;
-  color:var(--muted);
-  display:none;
-}
-
-/* big controls (buttons) */
-.actions {
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  justify-content:center;
-  margin-top:6px;
-}
-.btn {
-  flex: 0 0 48%;
-  padding:12px 10px;
-  border-radius:12px;
-  border:none;
-  font-size:16px;
-  font-weight:700;
-  background:var(--button-bg);
-  color:var(--button-text);
-  cursor:pointer;
-}
-.btn.secondary { background:transparent; color:var(--text); border:1px solid rgba(0,0,0,0.08); }
-.btn.small { flex: 0 0 30%; font-size:14px; padding:8px; }
-
-/* drawing area */
-.canvas-wrap {
-  width:100%;
-  display:flex;
-  justify-content:center;
-  margin-top:6px;
-}
-canvas#draw {
-  width:100%;
-  height:50vh; /* large drawing area */
-  max-height:520px;
-  background:linear-gradient(180deg, rgba(0,0,0,0.01), rgba(0,0,0,0.02));
-  border-radius:10px;
-  border:1px solid rgba(0,0,0,0.06);
-  touch-action:none;
-}
-
-/* footer small */
-.footer {
-  margin-top:8px;
-  font-size:12px;
-  color:var(--muted);
-  text-align:center;
-  padding-bottom:8px;
-}
-
-/* responsive tweaks */
-@media(min-width:720px){
-  #question{ font-size:48px; }
-  #answer{ font-size:44px; }
-  .btn{ font-size:18px; }
-}
+html,body{margin:0;height:100%;font-family:sans-serif;background:var(--bg);color:var(--text);}
+.app{min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:6px;box-sizing:border-box;}
+.card{width:100%;max-width:520px;background:var(--card);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:6px;}
+.header{display:flex;justify-content:space-between;align-items:center;}
+.title{font-size:18px;font-weight:600;}
+.tabs{display:flex;gap:6px;margin-top:4px;}
+.tab{flex:1;text-align:center;padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.08);cursor:pointer;}
+.tab.active{background:var(--tab-active);color:#fff;}
+.q-area{text-align:center;}
+#question{font-size:36px;font-weight:700;}
+#answer{font-size:36px;color:var(--muted);display:none;}
+.actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:6px;}
+.btn{flex:0 0 48%;padding:10px;font-weight:600;border:none;border-radius:8px;font-size:16px;background:var(--button-bg);color:var(--button-text);cursor:pointer;}
+.btn.secondary{background:transparent;color:var(--text);border:1px solid rgba(0,0,0,0.08);}
+.canvas-wrap{width:100%;display:flex;justify-content:center;margin-top:6px;}
+canvas#draw{width:100%;height:50vh;max-height:520px;border:1px solid rgba(0,0,0,0.06);border-radius:10px;touch-action:none;}
+.footer{text-align:center;font-size:12px;color:var(--muted);margin-top:6px;}
 </style>
 </head>
 <body>
-<div class="app" id="app">
-  <div class="card" role="application">
+
+<div class="app">
+  <div class="card">
     <div class="header">
       <div class="title">Kana Practice</div>
-      <div class="controls">
-        <button id="darkToggle" class="btn small secondary" title="Toggle dark mode">Dark</button>
-        <button id="speakBtn" class="btn small secondary" title="Play pronunciation">🔊</button>
+      <div>
+        <button id="darkToggle" class="btn secondary">🌙</button>
+        <button id="speakBtn" class="btn secondary">🔊</button>
       </div>
     </div>
 
-    <div class="tabs" role="tablist" aria-label="Practice mode">
+    <div class="tabs">
       <div class="tab active" data-mode="hiragana">Hiragana</div>
       <div class="tab" data-mode="katakana">Katakana</div>
       <div class="tab" data-mode="both">Both</div>
@@ -182,253 +55,29 @@ canvas#draw {
 
     <div class="q-area">
       <div id="question">Press Next</div>
-      <div id="answer" aria-live="polite"></div>
+      <div id="answer"></div>
     </div>
 
-    <div class="actions" aria-hidden="false">
+    <div class="actions">
       <button id="showBtn" class="btn">Show Answer</button>
       <button id="nextBtn" class="btn">Next</button>
       <button id="clearBtn" class="btn secondary">Clear Drawing</button>
     </div>
 
     <div class="canvas-wrap">
-      <canvas id="draw" aria-label="Drawing area for kana practice"></canvas>
+      <canvas id="draw"></canvas>
     </div>
 
-    <div class="footer">Both mode shows <strong>Hiragana / Katakana</strong> together (e.g. あ / ア). Audio uses your browser's speech voice (Japanese).</div>
+    <div class="footer">Both mode shows Hiragana / Katakana together. Audio uses your browser's Japanese voice.</div>
   </div>
 </div>
 
+<script src="app.js"></script>
 <script>
-/* ---------- Kana data (comprehensive) ----------
-   This array includes:
-   - basic vowels/consonants
-   - dakuten (g, z, d, b), handakuten (p)
-   - common contracted small-kana combos (kya, sha, cha, etc.)
-   Expandable if you want more later.
-*/
-
-// helper to create pairs quickly
-function pairs(list){ return list.map(x=>[x[0], x[1]]); }
-
-const hiraganaList = pairs([
-  ['a','あ'],['i','い'],['u','う'],['e','え'],['o','お'],
-  ['ka','か'],['ki','き'],['ku','く'],['ke','け'],['ko','こ'],
-  ['sa','さ'],['shi','し'],['su','す'],['se','せ'],['so','そ'],
-  ['ta','た'],['chi','ち'],['tsu','つ'],['te','て'],['to','と'],
-  ['na','な'],['ni','に'],['nu','ぬ'],['ne','ね'],['no','の'],
-  ['ha','は'],['hi','ひ'],['fu','ふ'],['he','へ'],['ho','ほ'],
-  ['ma','ま'],['mi','み'],['mu','む'],['me','め'],['mo','も'],
-  ['ya','や'],['yu','ゆ'],['yo','よ'],
-  ['ra','ら'],['ri','り'],['ru','る'],['re','れ'],['ro','ろ'],
-  ['wa','わ'],['wo','を'],['n','ん'],
-
-  // dakuten (voiced)
-  ['ga','が'],['gi','ぎ'],['gu','ぐ'],['ge','げ'],['go','ご'],
-  ['za','ざ'],['ji','じ'],['zu','ず'],['ze','ぜ'],['zo','ぞ'],
-  ['da','だ'],['di','ぢ'],['du','づ'],['de','で'],['do','ど'],
-  ['ba','ば'],['bi','び'],['bu','ぶ'],['be','べ'],['bo','ぼ'],
-
-  // handakuten (p)
-  ['pa','ぱ'],['pi','ぴ'],['pu','ぷ'],['pe','ぺ'],['po','ぽ'],
-
-  // contracted (small kana combos)
-  ['kya','きゃ'],['kyu','きゅ'],['kyo','きょ'],
-  ['sha','しゃ'],['shu','しゅ'],['sho','しょ'],
-  ['cha','ちゃ'],['chu','ちゅ'],['cho','ちょ'],
-  ['nya','にゃ'],['nyu','にゅ'],['nyo','にょ'],
-  ['hya','ひゃ'],['hyu','ひゅ'],['hyo','ひょ'],
-  ['mya','みゃ'],['myu','みゅ'],['myo','みょ'],
-  ['rya','りゃ'],['ryu','りゅ'],['ryo','りょ'],
-  ['gya','ぎゃ'],['gyu','ぎゅ'],['gyo','ぎょ'],
-  ['bya','びゃ'],['byu','びゅ'],['byo','びょ'],
-  ['pya','ぴゃ'],['pyu','ぴゅ'],['pyo','ぴょ'],
-  ['ja','じゃ'],['ju','じゅ'],['jo','じょ'],
-  // small kana standalone (practice small kana if you want)
-  ['small-ya','ゃ'],['small-yu','ゅ'],['small-yo','ょ'],['small-tsu','っ']
-]);
-
-const katakanaList = pairs([
-  ['a','ア'],['i','イ'],['u','ウ'],['e','エ'],['o','オ'],
-  ['ka','カ'],['ki','キ'],['ku','ク'],['ke','ケ'],['ko','コ'],
-  ['sa','サ'],['shi','シ'],['su','ス'],['se','セ'],['so','ソ'],
-  ['ta','タ'],['chi','チ'],['tsu','ツ'],['te','テ'],['to','ト'],
-  ['na','ナ'],['ni','ニ'],['nu','ヌ'],['ne','ネ'],['no','ノ'],
-  ['ha','ハ'],['hi','ヒ'],['fu','フ'],['he','ヘ'],['ho','ホ'],
-  ['ma','マ'],['mi','ミ'],['mu','ム'],['me','メ'],['mo','モ'],
-  ['ya','ヤ'],['yu','ユ'],['yo','ヨ'],
-  ['ra','ラ'],['ri','リ'],['ru','ル'],['re','レ'],['ro','ロ'],
-  ['wa','ワ'],['wo','ヲ'],['n','ン'],
-
-  ['ga','ガ'],['gi','ギ'],['gu','グ'],['ge','ゲ'],['go','ゴ'],
-  ['za','ザ'],['ji','ジ'],['zu','ズ'],['ze','ゼ'],['zo','ゾ'],
-  ['da','ダ'],['di','ヂ'],['du','ヅ'],['de','デ'],['do','ド'],
-  ['ba','バ'],['bi','ビ'],['bu','ブ'],['be','ベ'],['bo','ボ'],
-  ['pa','パ'],['pi','ピ'],['pu','プ'],['pe','ペ'],['po','ポ'],
-
-  ['kya','キャ'],['kyu','キュ'],['kyo','キョ'],
-  ['sha','シャ'],['shu','シュ'],['sho','ショ'],
-  ['cha','チャ'],['chu','チュ'],['cho','チョ'],
-  ['nya','ニャ'],['nyu','ニュ'],['nyo','ニョ'],
-  ['hya','ヒャ'],['hyu','ヒュ'],['hyo','ヒョ'],
-  ['mya','ミャ'],['myu','ミュ'],['myo','ミョ'],
-  ['rya','リャ'],['ryu','リュ'],['ryo','リョ'],
-  ['gya','ギャ'],['gyu','ギュ'],['gyo','ギョ'],
-  ['bya','ビャ'],['byu','ビュ'],['byo','ビョ'],
-  ['pya','ピャ'],['pyu','ピュ'],['pyo','ピョ'],
-  ['ja','ジャ'],['ju','ジュ'],['jo','ジョ'],
-  ['small-ya','ャ'],['small-yu','ュ'],['small-yo','ョ'],['small-tsu','ッ']
-]);
-
-/* app state */
-let currentMode = 'hiragana';
-let currentPool = hiraganaList.slice();
-let current = null;
-
-/* DOM refs */
-const tabs = document.querySelectorAll('.tab');
-const qEl = document.getElementById('question');
-const aEl = document.getElementById('answer');
-const showBtn = document.getElementById('showBtn');
-const nextBtn = document.getElementById('nextBtn');
-const clearBtn = document.getElementById('clearBtn');
-const darkToggle = document.getElementById('darkToggle');
-const speakBtn = document.getElementById('speakBtn');
-
-/* =========== Dark mode (persist) =========== */
-function loadTheme(){
-  const t = localStorage.getItem('kana-theme') || 'light';
-  if(t === 'dark') document.documentElement.setAttribute('data-theme','dark');
-}
-function toggleTheme(){
-  const cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-  const next = cur === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('kana-theme', next);
-}
-darkToggle.addEventListener('click', toggleTheme);
-loadTheme();
-
-/* =========== Tabs =========== */
-tabs.forEach(t => t.addEventListener('click', () => {
-  const mode = t.dataset.mode || t.innerText.toLowerCase();
-  setMode(mode);
-}));
-
-function setMode(mode){
-  currentMode = mode;
-  tabs.forEach(t => t.classList.toggle('active', t.dataset.mode === mode));
-  if(mode === 'hiragana') currentPool = hiraganaList.slice();
-  else if(mode === 'katakana') currentPool = katakanaList.slice();
-  else currentPool = hiraganaList.concat(katakanaList);
-  nextQuestion();
-}
-
-/* =========== Quiz logic =========== */
-function nextQuestion(){
-  if(!currentPool || currentPool.length === 0) return;
-  current = currentPool[Math.floor(Math.random()*currentPool.length)];
-  qEl.textContent = current[0];
-  aEl.style.display = 'none';
-  aEl.textContent = '';
-  clearCanvas();
-}
-function showAnswer(){
-  if(!current) return;
-  if(currentMode === 'both'){
-    const h = hiraganaList.find(x=>x[0] === current[0]);
-    const k = katakanaList.find(x=>x[0] === current[0]);
-    aEl.textContent = `${h ? h[1] : ''} / ${k ? k[1] : ''}`;
-  } else {
-    aEl.textContent = current[1];
-  }
-  aEl.style.display = 'block';
-}
-
-showBtn.addEventListener('click', showAnswer);
-nextBtn.addEventListener('click', nextQuestion);
-
-/* =========== Audio Pronunciation (Web Speech API) =========== */
-function speakCurrent(){
-  if(!current) return;
-  // prefer speaking the hiragana if available, otherwise katakana.
-  // For BOTH mode speak the hiragana (native) by default.
-  let textToSpeak;
-  if(currentMode === 'katakana') textToSpeak = (katakanaList.find(x=>x[0]===current[0]) || [null,''])[1];
-  else textToSpeak = (hiraganaList.find(x=>x[0]===current[0]) || [null,''])[1];
-  if(!textToSpeak) textToSpeak = current[1];
-  if('speechSynthesis' in window){
-    const u = new SpeechSynthesisUtterance(textToSpeak);
-    u.lang = 'ja-JP';
-    // adjust voice rate/volume if you want
-    u.rate = 0.9;
-    window.speechSynthesis.cancel(); // stop previous
-    window.speechSynthesis.speak(u);
-  } else {
-    alert('Speech not supported in this browser');
-  }
-}
-speakBtn.addEventListener('click', speakCurrent);
-
-/* =========== Drawing canvas (hi-dpi) =========== */
-const canvas = document.getElementById('draw');
-const ctx = canvas.getContext('2d');
-
-function resizeCanvas(){
-  const ratio = window.devicePixelRatio || 1;
-  const rect = canvas.getBoundingClientRect();
-  canvas.width = Math.round(rect.width * ratio);
-  canvas.height = Math.round(rect.height * ratio);
-  ctx.scale(ratio, ratio);
-  // set default stroke style
-  ctx.strokeStyle = window.getComputedStyle(document.documentElement).getPropertyValue('--text') || '#111';
-  ctx.lineWidth = 8;
-  ctx.lineCap = 'round';
-}
-window.addEventListener('resize', () => { resizeCanvas(); });
-resizeCanvas();
-
-let drawing = false;
-function getPointerPos(e){
-  const rect = canvas.getBoundingClientRect();
-  if(e.touches && e.touches.length) {
-    return {x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top};
-  }
-  return {x: e.clientX - rect.left, y: e.clientY - rect.top};
-}
-canvas.addEventListener('pointerdown', (e) => {
-  drawing = true;
-  const p = getPointerPos(e);
-  ctx.beginPath();
-  ctx.moveTo(p.x, p.y);
-});
-canvas.addEventListener('pointermove', (e) => {
-  if(!drawing) return;
-  const p = getPointerPos(e);
-  ctx.lineTo(p.x, p.y);
-  ctx.stroke();
-});
-canvas.addEventListener('pointerup', ()=> drawing = false);
-canvas.addEventListener('pointercancel', ()=> drawing = false);
-
-function clearCanvas(){
-  // clear with full resolution
-  const rect = canvas.getBoundingClientRect();
-  ctx.clearRect(0,0,rect.width, rect.height);
-}
-
-/* wire clear button */
-clearBtn.addEventListener('click', clearCanvas);
-
-/* install service worker if available: (registered in manifest link)
-   note: file name in sw.js (below) should be 'sw.js' in the same folder
-*/
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js').catch(()=>{/* ignore */});
+  navigator.serviceWorker.register('service-worker.js');
 }
-
-/* initialize */
-setMode('hiragana');
 </script>
+
 </body>
 </html>
