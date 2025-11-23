@@ -3,11 +3,13 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Kana Practice (Mobile PWA)</title>
+<title>Kana Master</title>
 <link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="images/icon-192.png">
 <meta name="theme-color" content="#0066ff" />
 
 <style>
+/* CSS Variables */
 :root{
   --bg: #f5f7fb;
   --card: #ffffff;
@@ -17,6 +19,7 @@
   --button-bg: #0066ff;
   --button-text: #ffffff;
   --tab-active: #0066ff;
+  --border-color: rgba(0,0,0,0.08);
 }
 [data-theme="dark"]{
   --bg: #0b1220;
@@ -27,9 +30,11 @@
   --button-bg: #1a6cff;
   --button-text: #fff;
   --tab-active: #1a6cff;
+  --border-color: rgba(255,255,255,0.1);
 }
 
-html,body{height:100%; margin:0; background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased;}
+/* Global/Reset */
+html,body{height:100%; margin:0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased;}
 .app {
   min-height:100vh;
   display:flex;
@@ -38,86 +43,90 @@ html,body{height:100%; margin:0; background:var(--bg); color:var(--text); -webki
   padding:12px;
   box-sizing:border-box;
 }
+
 /* Card container */
 .card{
   width:100%;
   max-width:520px;
   background:var(--card);
-  border-radius:14px;
-  box-shadow: 0 8px 24px rgba(2,6,23,0.08);
-  padding:12px;
+  border-radius:18px; /* Slightly larger radius for mobile feel */
+  box-shadow: 0 10px 30px rgba(2,6,23,0.1);
+  padding:16px; /* Slightly more padding */
   box-sizing:border-box;
   display:flex;
   flex-direction:column;
-  gap:8px;
+  gap:12px;
 }
 
-/* header */
+/* Header */
 .header {
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:8px;
-  padding:6px 4px;
+  padding:4px 0;
 }
-.title { font-size:18px; font-weight:600; }
-.controls { display:flex; gap:6px; align-items:center; }
+.title { font-size:20px; font-weight:700; }
+.controls { display:flex; gap:8px; align-items:center; }
 
-/* tabs */
+/* Tabs */
 .tabs {
   display:flex;
+  padding: 4px;
   gap:8px;
   justify-content:center;
-  margin:6px 0 2px;
+  background: var(--bg);
+  border-radius: 12px;
 }
 .tab {
   flex:1;
   text-align:center;
-  padding:10px 8px;
-  border-radius:10px;
-  border:1px solid rgba(0,0,0,0.06);
+  padding:8px 8px;
+  border-radius:8px;
   background:transparent;
   font-weight:600;
   cursor:pointer;
   user-select:none;
+  transition: all 0.2s ease-in-out;
 }
 .tab.active {
   background:var(--tab-active);
   color:white;
-  box-shadow:0 6px 16px rgba(6,30,84,0.08);
+  box-shadow:0 4px 12px rgba(0,102,255,0.3);
 }
 
-/* question & answer */
+/* Question & Answer */
 .q-area {
   display:flex;
   flex-direction:column;
   align-items:center;
   gap:6px;
-  padding:6px;
+  padding:10px;
 }
 #question {
-  font-size:36px;
+  font-size:48px; /* Larger question */
   font-weight:700;
-  letter-spacing:0.6px;
-  margin-top:4px;
+  letter-spacing:1px;
+  margin-top:6px;
 }
 #answer {
-  font-size:36px;
+  font-size:40px;
   color:var(--muted);
+  min-height: 48px; /* Keep space for answer */
   display:none;
 }
 
-/* big controls (buttons) */
+/* Big Controls (Buttons) */
 .actions {
   display:flex;
-  gap:8px;
+  gap:10px;
   flex-wrap:wrap;
   justify-content:center;
-  margin-top:6px;
+  margin-top:4px;
 }
 .btn {
-  flex: 0 0 48%;
-  padding:12px 10px;
+  flex: 1 1 45%; /* Better flex for two buttons per row */
+  padding:14px 10px;
   border-radius:12px;
   border:none;
   font-size:16px;
@@ -125,41 +134,44 @@ html,body{height:100%; margin:0; background:var(--bg); color:var(--text); -webki
   background:var(--button-bg);
   color:var(--button-text);
   cursor:pointer;
+  transition: background 0.2s;
 }
-.btn.secondary { background:transparent; color:var(--text); border:1px solid rgba(0,0,0,0.08); }
-.btn.small { flex: 0 0 30%; font-size:14px; padding:8px; }
+.btn.secondary { background:var(--card); color:var(--text); border:1px solid var(--border-color); }
+.btn.small { flex: 0 0 auto; font-size:14px; padding:8px 12px; }
 
-/* drawing area */
+/* Drawing Area */
 .canvas-wrap {
   width:100%;
   display:flex;
   justify-content:center;
-  margin-top:6px;
+  margin-top:8px;
 }
 canvas#draw {
   width:100%;
-  height:50vh; /* large drawing area */
-  max-height:520px;
-  background:linear-gradient(180deg, rgba(0,0,0,0.01), rgba(0,0,0,0.02));
-  border-radius:10px;
-  border:1px solid rgba(0,0,0,0.06);
+  height:40vh; /* Responsive height */
+  max-height:400px;
+  background:var(--bg);
+  border-radius:12px;
+  border:1px solid var(--border-color);
   touch-action:none;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
 }
 
-/* footer small */
+/* Footer small */
 .footer {
-  margin-top:8px;
+  margin-top:10px;
   font-size:12px;
   color:var(--muted);
   text-align:center;
-  padding-bottom:8px;
+  padding-bottom:10px;
 }
 
-/* responsive tweaks */
+/* Responsive tweaks */
 @media(min-width:720px){
-  #question{ font-size:48px; }
-  #answer{ font-size:44px; }
+  #question{ font-size:64px; }
+  #answer{ font-size:56px; }
   .btn{ font-size:18px; }
+  canvas#draw { max-height:500px; height: 50vh;}
 }
 </style>
 </head>
@@ -167,9 +179,9 @@ canvas#draw {
 <div class="app" id="app">
   <div class="card" role="application">
     <div class="header">
-      <div class="title">Kana Practice</div>
+      <div class="title">Kana Master</div>
       <div class="controls">
-        <button id="darkToggle" class="btn small secondary" title="Toggle dark mode">Dark</button>
+        <button id="darkToggle" class="btn small secondary" title="Toggle dark mode">🌙</button>
         <button id="speakBtn" class="btn small secondary" title="Play pronunciation">🔊</button>
       </div>
     </div>
@@ -181,13 +193,13 @@ canvas#draw {
     </div>
 
     <div class="q-area">
-      <div id="question">Press Next</div>
+      <div id="question">Tap Next</div>
       <div id="answer" aria-live="polite"></div>
     </div>
 
     <div class="actions" aria-hidden="false">
-      <button id="showBtn" class="btn">Show Answer</button>
-      <button id="nextBtn" class="btn">Next</button>
+      <button id="nextBtn" class="btn">Next Kana</button>
+      <button id="showBtn" class="btn secondary">Show Answer</button>
       <button id="clearBtn" class="btn secondary">Clear Drawing</button>
     </div>
 
@@ -195,18 +207,12 @@ canvas#draw {
       <canvas id="draw" aria-label="Drawing area for kana practice"></canvas>
     </div>
 
-    <div class="footer">Both mode shows <strong>Hiragana / Katakana</strong> together (e.g. あ / ア). Audio uses your browser's speech voice (Japanese).</div>
+    <div class="footer">Practice by writing in the box. Audio uses your device's Japanese voice.</div>
   </div>
 </div>
 
 <script>
-/* ---------- Kana data (comprehensive) ----------
-   This array includes:
-   - basic vowels/consonants
-   - dakuten (g, z, d, b), handakuten (p)
-   - common contracted small-kana combos (kya, sha, cha, etc.)
-   Expandable if you want more later.
-*/
+/* ---------- Kana data (comprehensive) ---------- */
 
 // helper to create pairs quickly
 function pairs(list){ return list.map(x=>[x[0], x[1]]); }
@@ -222,16 +228,13 @@ const hiraganaList = pairs([
   ['ya','や'],['yu','ゆ'],['yo','よ'],
   ['ra','ら'],['ri','り'],['ru','る'],['re','れ'],['ro','ろ'],
   ['wa','わ'],['wo','を'],['n','ん'],
-
   // dakuten (voiced)
   ['ga','が'],['gi','ぎ'],['gu','ぐ'],['ge','げ'],['go','ご'],
   ['za','ざ'],['ji','じ'],['zu','ず'],['ze','ぜ'],['zo','ぞ'],
   ['da','だ'],['di','ぢ'],['du','づ'],['de','で'],['do','ど'],
   ['ba','ば'],['bi','び'],['bu','ぶ'],['be','べ'],['bo','ぼ'],
-
   // handakuten (p)
   ['pa','ぱ'],['pi','ぴ'],['pu','ぷ'],['pe','ぺ'],['po','ぽ'],
-
   // contracted (small kana combos)
   ['kya','きゃ'],['kyu','きゅ'],['kyo','きょ'],
   ['sha','しゃ'],['shu','しゅ'],['sho','しょ'],
@@ -244,7 +247,7 @@ const hiraganaList = pairs([
   ['bya','びゃ'],['byu','びゅ'],['byo','びょ'],
   ['pya','ぴゃ'],['pyu','ぴゅ'],['pyo','ぴょ'],
   ['ja','じゃ'],['ju','じゅ'],['jo','じょ'],
-  // small kana standalone (practice small kana if you want)
+  // small kana standalone
   ['small-ya','ゃ'],['small-yu','ゅ'],['small-yo','ょ'],['small-tsu','っ']
 ]);
 
@@ -259,13 +262,11 @@ const katakanaList = pairs([
   ['ya','ヤ'],['yu','ユ'],['yo','ヨ'],
   ['ra','ラ'],['ri','リ'],['ru','ル'],['re','レ'],['ro','ロ'],
   ['wa','ワ'],['wo','ヲ'],['n','ン'],
-
   ['ga','ガ'],['gi','ギ'],['gu','グ'],['ge','ゲ'],['go','ゴ'],
   ['za','ザ'],['ji','ジ'],['zu','ズ'],['ze','ゼ'],['zo','ゾ'],
   ['da','ダ'],['di','ヂ'],['du','ヅ'],['de','デ'],['do','ド'],
   ['ba','バ'],['bi','ビ'],['bu','ブ'],['be','ベ'],['bo','ボ'],
   ['pa','パ'],['pi','ピ'],['pu','プ'],['pe','ペ'],['po','ポ'],
-
   ['kya','キャ'],['kyu','キュ'],['kyo','キョ'],
   ['sha','シャ'],['shu','シュ'],['sho','ショ'],
   ['cha','チャ'],['chu','チュ'],['cho','チョ'],
@@ -299,15 +300,18 @@ const speakBtn = document.getElementById('speakBtn');
 function loadTheme(){
   const t = localStorage.getItem('kana-theme') || 'light';
   if(t === 'dark') document.documentElement.setAttribute('data-theme','dark');
+  else document.documentElement.setAttribute('data-theme','light');
 }
 function toggleTheme(){
   const cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
   const next = cur === 'dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', next);
   localStorage.setItem('kana-theme', next);
+  // Re-run resize to update stroke style with new theme
+  resizeCanvas(); 
 }
 darkToggle.addEventListener('click', toggleTheme);
-loadTheme();
+
 
 /* =========== Tabs =========== */
 tabs.forEach(t => t.addEventListener('click', () => {
@@ -327,7 +331,13 @@ function setMode(mode){
 /* =========== Quiz logic =========== */
 function nextQuestion(){
   if(!currentPool || currentPool.length === 0) return;
-  current = currentPool[Math.floor(Math.random()*currentPool.length)];
+  // Use a temporary array to ensure we don't pick the same item twice in a row
+  let newKana;
+  do {
+    newKana = currentPool[Math.floor(Math.random()*currentPool.length)];
+  } while(current && newKana[0] === current[0]); // Simple check to avoid repetition
+  
+  current = newKana;
   qEl.textContent = current[0];
   aEl.style.display = 'none';
   aEl.textContent = '';
@@ -351,21 +361,25 @@ nextBtn.addEventListener('click', nextQuestion);
 /* =========== Audio Pronunciation (Web Speech API) =========== */
 function speakCurrent(){
   if(!current) return;
-  // prefer speaking the hiragana if available, otherwise katakana.
-  // For BOTH mode speak the hiragana (native) by default.
   let textToSpeak;
-  if(currentMode === 'katakana') textToSpeak = (katakanaList.find(x=>x[0]===current[0]) || [null,''])[1];
-  else textToSpeak = (hiraganaList.find(x=>x[0]===current[0]) || [null,''])[1];
-  if(!textToSpeak) textToSpeak = current[1];
+  if(currentMode === 'katakana') {
+      textToSpeak = (katakanaList.find(x=>x[0]===current[0]) || [null,''])[1];
+  } else {
+      // Prioritize Hiragana for sound, as it is native Japanese script.
+      textToSpeak = (hiraganaList.find(x=>x[0]===current[0]) || [null,''])[1];
+  }
+
+  // Fallback to the current character if the lookup fails for some reason
+  if(!textToSpeak) textToSpeak = current[1]; 
+  
   if('speechSynthesis' in window){
     const u = new SpeechSynthesisUtterance(textToSpeak);
     u.lang = 'ja-JP';
-    // adjust voice rate/volume if you want
-    u.rate = 0.9;
+    u.rate = 0.8; // Slightly slower rate for learning
     window.speechSynthesis.cancel(); // stop previous
     window.speechSynthesis.speak(u);
   } else {
-    alert('Speech not supported in this browser');
+    alert('Speech synthesis is not supported in this browser or device.');
   }
 }
 speakBtn.addEventListener('click', speakCurrent);
@@ -380,13 +394,15 @@ function resizeCanvas(){
   canvas.width = Math.round(rect.width * ratio);
   canvas.height = Math.round(rect.height * ratio);
   ctx.scale(ratio, ratio);
-  // set default stroke style
-  ctx.strokeStyle = window.getComputedStyle(document.documentElement).getPropertyValue('--text') || '#111';
-  ctx.lineWidth = 8;
+  // Re-apply styles after scale
+  ctx.strokeStyle = window.getComputedStyle(document.documentElement).getPropertyValue('--text').trim() || '#111827';
+  ctx.lineWidth = 10; // Slightly thicker line for mobile touch
   ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  clearCanvas(); // Clear when resizing
 }
-window.addEventListener('resize', () => { resizeCanvas(); });
-resizeCanvas();
+
+window.addEventListener('resize', resizeCanvas);
 
 let drawing = false;
 function getPointerPos(e){
@@ -396,12 +412,16 @@ function getPointerPos(e){
   }
   return {x: e.clientX - rect.left, y: e.clientY - rect.top};
 }
+
 canvas.addEventListener('pointerdown', (e) => {
   drawing = true;
   const p = getPointerPos(e);
   ctx.beginPath();
   ctx.moveTo(p.x, p.y);
-});
+  // This prevents scrolling/zoom on touch devices
+  e.preventDefault(); 
+}, {passive: false});
+
 canvas.addEventListener('pointermove', (e) => {
   if(!drawing) return;
   const p = getPointerPos(e);
@@ -410,25 +430,36 @@ canvas.addEventListener('pointermove', (e) => {
 });
 canvas.addEventListener('pointerup', ()=> drawing = false);
 canvas.addEventListener('pointercancel', ()=> drawing = false);
+canvas.addEventListener('mouseleave', ()=> drawing = false); // stop drawing if pointer leaves canvas
 
 function clearCanvas(){
-  // clear with full resolution
   const rect = canvas.getBoundingClientRect();
-  ctx.clearRect(0,0,rect.width, rect.height);
+  const ratio = window.devicePixelRatio || 1;
+  ctx.clearRect(0,0, rect.width * ratio, rect.height * ratio);
+  resizeCanvas(); // Re-set drawing context when clearing (important for theme switch)
 }
 
 /* wire clear button */
 clearBtn.addEventListener('click', clearCanvas);
 
-/* install service worker if available: (registered in manifest link)
-   note: file name in sw.js (below) should be 'sw.js' in the same folder
-*/
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js').catch(()=>{/* ignore */});
+/* PWA service worker registration */
+function registerSW(){
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('sw.js')
+      .then(() => console.log('Service Worker Registered'))
+      .catch((error) => console.log('Service Worker registration failed:', error));
+  }
 }
 
-/* initialize */
-setMode('hiragana');
+/* initialize app */
+loadTheme();
+registerSW();
+// Initial setup must be done after theme/resize to get correct colors
+window.addEventListener('load', () => { 
+  resizeCanvas(); 
+  setMode('hiragana');
+}); 
+
 </script>
 </body>
 </html>
