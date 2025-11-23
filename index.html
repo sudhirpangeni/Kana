@@ -2,50 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Japanese Kana Practice (Mobile PWA)</title>
-<link rel="manifest" href="manifest.json">
-<script>
-if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("service-worker.js");
-}
-</script>
-
+<title>Japanese Kana Practice</title>
 <style>
-/* Mobile-friendly layout */
-body { 
-    font-family: Arial, sans-serif; 
-    text-align: center; 
-    padding: 10px; 
-    margin: 0; 
-    background: #f5f5f5;
-}
-h2 { font-size: 24px; margin: 10px 0; }
-#tabs { display: flex; justify-content: space-around; margin-bottom: 10px; }
-.tab { flex: 1; padding: 12px; margin: 0 5px; border: 2px solid #0066ff; border-radius: 8px; cursor: pointer; font-size: 16px; background-color: white; }
+body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+#tabs { margin-bottom: 20px; }
+.tab { display: inline-block; padding: 10px 20px; margin: 0 5px; border: 2px solid #0066ff; border-radius: 8px; cursor: pointer; }
 .tab.active { background-color: #0066ff; color: white; }
-#question { font-size: 32px; margin: 15px 0; }
-#answer { font-size: 32px; margin: 15px 0; color: green; display: none; }
-button { 
-    padding: 15px 20px; 
-    font-size: 18px; 
-    margin: 8px 5px; 
-    width: 28%;
-    border-radius: 8px;
-    border: none;
-    background-color: #0066ff;
-    color: white;
-}
-button:active { background-color: #004bb5; }
-#draw-area { 
-    border: 2px solid #000; 
-    margin: 10px auto; 
-    width: 90%; 
-    height: 250px; 
-    touch-action: none; 
-    background: white;
-    border-radius: 8px;
-}
+#question { font-size: 40px; margin: 20px; }
+#answer { font-size: 40px; margin: 20px; color: green; display: none; }
+button { padding: 10px 20px; font-size: 18px; margin: 10px; }
+#draw-area { border: 2px solid #000; margin: 20px auto; touch-action: none; }
 </style>
 </head>
 <body>
@@ -53,63 +19,36 @@ button:active { background-color: #004bb5; }
 <h2>Japanese Kana Practice</h2>
 
 <div id="tabs">
-    <div class="tab active" onclick="setMode('hiragana')">Hiragana</div>
-    <div class="tab" onclick="setMode('katakana')">Katakana</div>
-    <div class="tab" onclick="setMode('both')">Both</div>
+    <div class="tab active" onclick="setMode('hiragana')">Practice Hiragana</div>
+    <div class="tab" onclick="setMode('katakana')">Practice Katakana</div>
+    <div class="tab" onclick="setMode('both')">Practice Both</div>
 </div>
 
 <div id="question">Press NEXT to start</div>
 <div id="answer"></div>
 
-<div style="display:flex; justify-content:center; flex-wrap:wrap;">
-    <button onclick="showAnswer()">Show Answer</button>
-    <button onclick="nextQuestion()">Next</button>
-    <button onclick="clearCanvas()">Clear Drawing</button>
-</div>
+<button onclick="showAnswer()">Show Answer</button>
+<button onclick="nextQuestion()">Next</button>
+<button onclick="clearCanvas()">Clear Drawing</button>
 
 <h3>Draw your answer here:</h3>
-<canvas id="draw-area"></canvas>
+<canvas id="draw-area" width="300" height="300"></canvas>
 
 <script>
-// -----------------------
-// Kana Data
-// -----------------------
 const hiraganaList = [
-    ["a","あ"],["i","い"],["u","う"],["e","え"],["o","お"],
-    ["ka","か"],["ki","き"],["ku","く"],["ke","け"],["ko","こ"],
-    ["sa","さ"],["shi","し"],["su","す"],["se","せ"],["so","そ"],
-    ["ta","た"],["chi","ち"],["tsu","つ"],["te","て"],["to","と"],
-    ["na","な"],["ni","に"],["nu","ぬ"],["ne","ね"],["no","の"],
-    ["ha","は"],["hi","ひ"],["fu","ふ"],["he","へ"],["ho","ほ"],
-    ["ma","ま"],["mi","み"],["mu","む"],["me","め"],["mo","も"],
-    ["ya","や"],["yu","ゆ"],["yo","よ"],
-    ["ra","ら"],["ri","り"],["ru","る"],["re","れ"],["ro","ろ"],
-    ["wa","わ"],["wo","を"],["n","ん"]
+["a","あ"],["i","い"],["u","う"],["e","え"],["o","お"],
+["ka","か"],["ki","き"],["ku","く"],["ke","け"],["ko","こ"]
 ];
 
 const katakanaList = [
-    ["a","ア"],["i","イ"],["u","ウ"],["e","エ"],["o","オ"],
-    ["ka","カ"],["ki","キ"],["ku","ク"],["ke","ケ"],["ko","コ"],
-    ["sa","サ"],["shi","シ"],["su","ス"],["se","セ"],["so","ソ"],
-    ["ta","タ"],["chi","チ"],["tsu","ツ"],["te","テ"],["to","ト"],
-    ["na","ナ"],["ni","ニ"],["nu","ヌ"],["ne","ネ"],["no","ノ"],
-    ["ha","ハ"],["hi","ヒ"],["fu","フ"],["he","ヘ"],["ho","ホ"],
-    ["ma","マ"],["mi","ミ"],["mu","ム"],["me","メ"],["mo","モ"],
-    ["ya","ヤ"],["yu","ユ"],["yo","ヨ"],
-    ["ra","ラ"],["ri","リ"],["ru","ル"],["re","レ"],["ro","ロ"],
-    ["wa","ワ"],["wo","ヲ"],["n","ン"]
+["a","ア"],["i","イ"],["u","ウ"],["e","エ"],["o","オ"],
+["ka","カ"],["ki","キ"],["ku","ク"],["ke","ケ"],["ko","コ"]
 ];
 
-// -----------------------
-// Current Mode
-// -----------------------
 let currentMode = 'hiragana';
 let currentPool = hiraganaList.slice();
 let current = null;
 
-// -----------------------
-// Tabs Function
-// -----------------------
 function setMode(mode){
     currentMode = mode;
     document.querySelectorAll('.tab').forEach(tab=>tab.classList.remove('active'));
@@ -124,9 +63,6 @@ function setMode(mode){
     nextQuestion();
 }
 
-// -----------------------
-// Next / Show Answer
-// -----------------------
 function nextQuestion() {
     current = currentPool[Math.floor(Math.random()*currentPool.length)];
     document.getElementById("question").innerText = current[0];
@@ -136,24 +72,28 @@ function nextQuestion() {
 
 function showAnswer() {
     if(!current) return;
-    document.getElementById("answer").innerText = current[1];
+
+    if(currentMode === "both") {
+        let h = hiraganaList.find(x => x[0] === current[0]);
+        let k = katakanaList.find(x => x[0] === current[0]);
+        document.getElementById("answer").innerText =
+            (h ? h[1] : "") + " / " + (k ? k[1] : "");
+    } else {
+        document.getElementById("answer").innerText = current[1];
+    }
+
     document.getElementById("answer").style.display = "block";
 }
 
-// -----------------------
-// Drawing Canvas
-// -----------------------
 const canvas = document.getElementById("draw-area");
-canvas.width = canvas.offsetWidth; 
-canvas.height = 250;
 const ctx = canvas.getContext("2d");
 let drawing = false;
 
 function startDraw(e){drawing=true; ctx.beginPath(); ctx.moveTo(getX(e),getY(e));}
 function draw(e){if(!drawing)return; ctx.lineWidth=6; ctx.lineCap="round"; ctx.lineTo(getX(e),getY(e)); ctx.stroke();}
 function endDraw(){drawing=false;}
-function getX(e){return (e.touches?e.touches[0].clientX:e.clientX)-canvas.getBoundingClientRect().left;}
-function getY(e){return (e.touches?e.touches[0].clientY:e.clientY)-canvas.getBoundingClientRect().top;}
+function getX(e){return (e.touches?e.touches[0].clientX:e.clientX)-canvas.offsetLeft;}
+function getY(e){return (e.touches?e.touches[0].clientY:e.clientY)-canvas.offsetTop;}
 canvas.addEventListener("mousedown",startDraw);
 canvas.addEventListener("mousemove",draw);
 canvas.addEventListener("mouseup",endDraw);
@@ -161,9 +101,9 @@ canvas.addEventListener("mouseout",endDraw);
 canvas.addEventListener("touchstart",(e)=>{e.preventDefault(); startDraw(e);});
 canvas.addEventListener("touchmove",(e)=>{e.preventDefault(); draw(e);});
 canvas.addEventListener("touchend",endDraw);
+
 function clearCanvas(){ctx.clearRect(0,0,canvas.width,canvas.height);}
 
-// Initialize
 setMode('hiragana');
 </script>
 </body>
